@@ -64,7 +64,8 @@ generated code. %
   \draw[dashed, thick] (-4.2,-1.35) -- (4.2,-1.35)
     node[note, below right]{trust boundary};
   \draw[arrow] (ai) -- node[note, right]{compiled\\against} (iface);
-  \draw[arrow] (runtime) -- node[note, left]{implements\\capabilities} (iface);
+  \draw[arrow] (runtime) -- (iface);
+  \node[note, left] at (-0.15,-0.95) {implements\\capabilities};
 \end{tikzpicture}
 \caption{Jo framework split for confining generated code. %
 Only the runtime library below the trust boundary needs to be trusted.}
