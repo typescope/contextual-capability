@@ -39,9 +39,9 @@ If you use this model, please cite:
 
 ```bibtex
 @misc{lambda-cc,
-  author = {Fengyun Liu},
+  author = {Fengyun Liu and Ond{\v{r}}ej Lhot{\'a}k},
   title = {A Mathematical Model of Contextual Capabilities},
-  note = {TypeScope. Mechanized Coq development and accompanying paper},
+  note = {Mechanized Coq development and accompanying paper},
   year = {2026}
 }
 ```
