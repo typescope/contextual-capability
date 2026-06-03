@@ -1,0 +1,94 @@
+% typing.tex - Type System and Capability Tracking
+
+\subsection{Type System and Capability Tracking}
+\label{sec:typing}
+
+\autoref{fig:typing-rules} presents the full system. %
+The type system assigns each term both a type and a capability set. %
+The type
+describes the value produced; the capability set is a static upper bound on
+the authority the term may use. %
+The judgment
+\[
+\typ{\cpdecl}{\tpenv}{t}{T}{\varphi}
+\]
+means that term $t$ has type $T$ and may access capabilities in $\varphi$. %
+
+\begin{figure}[t]
+\centering
+\begin{mathpar}
+\inferrule*[Right=\rn{T-Const}]
+  { }
+  {\typ{\cpdecl}{\tpenv}{\tmconst{n}}{\tnat}{\effempty}}
+
+\inferrule*[Right=\rn{T-Var}]
+  {\tpenv(x) = T}
+  {\typ{\cpdecl}{\tpenv}{x}{T}{\effempty}}
+
+\inferrule*[Right=\rn{T-CVar}]
+  {c \in \cpdecl \\
+   \cpdecl(c) = T}
+  {\typ{\cpdecl}{\tpenv}{\tmcvar{c}}{T}{\eff{c}}}
+
+\\
+
+\inferrule*[Right=\rn{T-Abs}]
+  {\typ{\cpdecl}{\tpenv, x{:}T_1}{t}{T_2}{\varphi'}}
+  {\typ{\cpdecl}{\tpenv}{\tmabs{x}{T_1}{\varphi}{\varphi}{t}}
+       {\tarr{T_1}{T_2}{\varphi}{\varphi}}{\varphi' \effdiff \varphi}}
+
+
+\inferrule*[Right=\rn{T-App}]
+  {\typ{\cpdecl}{\tpenv}{t_1}{\tarr{T_1}{T_2}{\varphi}{\varphi}}{\varphi_1} \\
+   \typ{\cpdecl}{\tpenv}{t_2}{T_1}{\varphi_2}}
+  {\typ{\cpdecl}{\tpenv}{\tmapp{t_1}{t_2}}{T_2}
+       {\varphi \effunion \varphi_1 \effunion \varphi_2}}
+
+\inferrule*[Right=\rn{T-With}]
+  {\cpdecl(c) = T_1 \\
+   \typ{\cpdecl}{\tpenv}{e_1}{T_1}{\varphi_1} \\
+   \typ{\cpdecl}{\tpenv}{e_2}{T_2}{\varphi_2}}
+  {\typ{\cpdecl}{\tpenv}{\tmwith{c}{e_1}{e_2}}{T_2}
+       {\varphi_1 \effunion (\varphi_2 \effdiff \eff{c})}}
+\\
+
+\inferrule*[Right=\rn{T-Allow}]
+  {\typ{\cpdecl}{\tpenv}{e}{T}{\varphi'} \\
+   \varphi' \effsubset \varphi}
+  {\typ{\cpdecl}{\tpenv}{\tmallow{\varphi}{e}}{T}{\varphi'}}
+
+\inferrule*[Right=\rn{T-Sub}]
+  {\typ{\cpdecl}{\tpenv}{t}{T}{\varphi} \\
+   c \in \cpdecl}
+  {\typ{\cpdecl}{\tpenv}{t}{T}{\varphi \effunion \eff{c}}}
+\end{mathpar}
+\caption{Typing rules for \lambdaCap{}}
+\label{fig:typing-rules}
+\end{figure}
+
+\rn{T-CVar} is the rule that actually uses a capability: accessing $\tmcvar{c}$
+adds exactly $c$ to the term's capabilities. %
+\rn{T-Abs} is the central rule. %
+If the function body may use capabilities $\varphi'$, and the lambda marks
+$\varphi$ as caller-provided, then the lambda expression itself requires only
+$\varphi' \effdiff \varphi$ at its definition site. %
+In other words, capabilities listed in $\varphi$ are expected from the call site
+rather than from closure creation. %
+The function type records the caller-provided capability set $\varphi$ above the
+arrow. %
+
+\rn{T-App} restores caller responsibility: applying a function of type
+$\tarr{T_1}{T_2}{\varphi}{\varphi}$ contributes $\varphi$ to the application's
+capabilities. %
+This is the static counterpart of the runtime semantics, where the closure does
+not capture the capabilities in $\varphi$ and the caller must supply them at
+application time. %
+
+\rn{T-With} binds a value to capability $c$ and masks that requirement in the
+body, so uses of $c$ inside $e_2$ do not remain obligations of the outer
+context. %
+\rn{T-Allow} turns dynamic restriction into a static contract: if $e$ checks
+with capability set $\varphi'$ and $\varphi' \subseteq \varphi$, then
+restricting execution to $\varphi$ cannot remove a capability that the term
+needs. %
+\rn{T-Sub} is standard weakening. %

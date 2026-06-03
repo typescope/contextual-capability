@@ -1,0 +1,171 @@
+% main.tex - A Mathematical Model of Contextual Capabilities
+\documentclass[11pt,a4paper]{article}
+
+% Page geometry
+\usepackage[margin=1in]{geometry}
+
+% Custom macros
+\usepackage{main}
+
+% Additional packages
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+% Hyperref configuration
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!70!black,
+  pdftitle={A Mathematical Model of Contextual Capabilities},
+  pdfauthor={Fengyun Liu, TypeScope},
+  pdfsubject={Capability-based security, formal verification},
+  pdfkeywords={capabilities, security, formal methods, Coq, lambda calculus}
+}
+
+\pdfstringdefDisableCommands{%
+  \def\lambdaCC{lambda-CC}%
+  \def\lambdaCap{lambda-CC}%
+}
+
+% Title information
+\title{\textbf{A Mathematical Model of Contextual Capabilities}\\[0.5em]
+\large Formally Verified Static Capability Tracking in
+\texorpdfstring{\lambdaCC}{lambda-CC}}
+
+\author{Fengyun Liu\\TypeScope}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Capability-based security offers a principled way to enforce least privilege,
+  but three gaps remain. %
+  Traditional capability systems such as the object-capability model typically
+  do not support static checking of capability usage. %
+  Meanwhile, manual propagation of capabilities through every interface incurs
+  substantial boilerplate when multiple fine-grained capabilities are
+  involved. %
+  Finally, existing capability systems do not always treat capabilities as
+  abstract interfaces to enable simulation and testing. %
+
+  We present \lambdaCC{}, a minimal calculus of \emph{contextual capabilities}:
+  capabilities that are both statically tracked and selectively supplied by the
+  surrounding calling context. %
+  The development is mechanized in Coq. %
+  Although \lambdaCC{} is intentionally minimal, it provides a mathematical core
+  for designing secure programming languages with statically checked capability
+  propagation, authority attenuation, and safe execution of untrusted code. %
+\end{abstract}
+
+\vspace{1em}
+\noindent\textbf{Keywords:} capability-based security, formal verification,
+capability systems, lambda calculus
+
+\tableofcontents
+
+\newpage
+
+% Include all sections
+\input{src/introduction}
+\input{src/background}
+\input{src/calculus}
+\input{src/soundness}
+\input{src/cases}
+\input{src/related}
+\input{src/conclusion}
+
+% Bibliography
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{dennis-vanhorn}
+J.~B. Dennis and E.~C. Van~Horn. %
+\newblock Programming semantics for multiprogrammed computations. %
+\newblock {\em Communications of the ACM}, 9(3):143--155, 1966. %
+
+\bibitem{miller-robust}
+M.~S. Miller. %
+\newblock {\em Robust Composition: Towards a Unified Approach to Access Control
+  and Concurrency Control}. %
+\newblock PhD thesis, Johns Hopkins University, 2006. %
+
+\bibitem{miller-paradigm}
+M.~S. Miller, K.-P. Yee, and J.~Shapiro. %
+\newblock Capability myths demolished. %
+\newblock Technical Report SRL2003-02, Johns Hopkins University, 2003. %
+
+\bibitem{e-lang}
+M.~S. Miller, E.~D. Tribble, and J.~Shapiro. %
+\newblock Concurrency among strangers: Programming in {E} as plan coordination. %
+\newblock In {\em Symposium on Trustworthy Global Computing}, pages 195--229. %
+  Springer, 2005. %
+
+\bibitem{joe-e}
+A.~Mettler, D.~Wagner, and T.~Close. %
+\newblock Joe-{E}: A security-oriented subset of {J}ava. %
+\newblock In {\em Network and Distributed System Security Symposium (NDSS)},
+  2010. %
+
+\bibitem{newspeak}
+G.~Bracha and D.~Ungar. %
+\newblock Mirrors: Design principles for meta-level facilities of
+  object-oriented programming languages. %
+\newblock In {\em OOPSLA}, pages 331--344, 2004. %
+
+\bibitem{saltzer-schroeder}
+J.~H. Saltzer and M.~D. Schroeder. %
+\newblock The protection of information in computer systems. %
+\newblock {\em Proceedings of the IEEE}, 63(9):1278--1308, 1975. %
+
+\bibitem{hardy-confused}
+N.~Hardy. %
+\newblock The confused deputy: (or why capabilities might have been invented). %
+\newblock {\em ACM SIGOPS Operating Systems Review}, 22(4):36--38, 1988. %
+
+\bibitem{devriese-effect}
+D.~Devriese and F.~Piessens. %
+\newblock Noninterference through secure multi-execution. %
+\newblock In {\em IEEE Symposium on Security and Privacy}, pages 109--124, 2010. %
+
+\bibitem{swasey-caps}
+D.~Swasey, D.~Garg, and D.~Dreyer. %
+\newblock Robust and compositional verification of object capability patterns. %
+\newblock {\em Proceedings of the ACM on Programming Languages}, 1(OOPSLA):1--26,
+  2017. %
+
+\bibitem{lucassen-gifford}
+J.~M. Lucassen and D.~K. Gifford. %
+\newblock Polymorphic effect systems. %
+\newblock In {\em Proceedings of the 15th ACM SIGPLAN-SIGACT symposium on
+  Principles of programming languages}, pages 47--57, 1988. %
+
+\bibitem{talpin-jouvelot}
+J.-P. Talpin and P.~Jouvelot. %
+\newblock Polymorphic type, region and effect inference. %
+\newblock {\em Journal of Functional Programming}, 2(3):245--271, 1992. %
+
+\bibitem{petricek-coeffects}
+T.~Petricek, D.~Orchard, and A.~Mycroft. %
+\newblock Coeffects: A calculus of context-dependent computation. %
+\newblock In {\em Proceedings of the 19th ACM SIGPLAN International Conference
+  on Functional Programming}, pages 123--135, 2014. %
+
+\bibitem{pierce-tapl}
+B.~C. Pierce. %
+\newblock {\em Types and Programming Languages}. %
+\newblock MIT Press, 2002. %
+
+\bibitem{pierce-atapl}
+B.~C. Pierce, editor. %
+\newblock {\em Advanced Topics in Types and Programming Languages}. %
+\newblock MIT Press, 2005. %
+
+\end{thebibliography}
+
+\end{document}

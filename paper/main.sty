@@ -1,0 +1,185 @@
+% main.sty - Custom macros for the lambda^CC white paper
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{main}[2024/01/01 lambda CC Paper Macros]
+
+% ================================================================
+% Required packages
+% ================================================================
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{mathpartir}
+\RequirePackage{stmaryrd}
+\RequirePackage{xcolor}
+\RequirePackage{listings}
+\RequirePackage{hyperref}
+
+% ================================================================
+% Colors (color-blind friendly)
+% ================================================================
+\definecolor{typecolor}{RGB}{0,90,156}      % Blue
+\definecolor{termcolor}{RGB}{0,128,0}       % Green
+\definecolor{capcolor}{RGB}{180,90,0}       % Orange
+\definecolor{rulecolor}{RGB}{128,0,128}     % Purple
+
+% ================================================================
+% Type notation
+% ================================================================
+\newcommand{\tnat}{\textsf{Nat}}
+\newcommand{\tarr}[4]{#1 \overset{#3}{\rightarrow} #2}
+\newcommand{\stype}[1]{\textcolor{typecolor}{#1}}
+\newcommand{\Type}{\mathsf{Type}}
+
+% ================================================================
+% Term notation
+% ================================================================
+\newcommand{\sterm}[1]{\textcolor{termcolor}{#1}}
+\newcommand{\tmconst}[1]{#1}
+\newcommand{\tmvar}[1]{#1}
+\newcommand{\tmcvar}[1]{\mathbf{#1}}
+\newcommand{\tmabs}[5]{\lambda (#1{:}#2, #3).\,#5}
+\newcommand{\tmabsshort}[2]{\lambda #1.\,#2}
+\newcommand{\tmapp}[2]{#1\;#2}
+\newcommand{\tmwith}[3]{\mathbf{with}\;#1 = #2\;\mathbf{in}\;#3}
+\newcommand{\tmallow}[2]{\mathbf{allow}\;#1\;\mathbf{in}\;#2}
+
+% ================================================================
+% Value notation
+% ================================================================
+\newcommand{\vlconst}[1]{#1}
+\newcommand{\vlclos}[6]{\langle\lambda #1{:}#2.\,#3,\;#4,\;#5\rangle^{#6}}
+\newcommand{\vlclosshort}[4]{\langle\lambda #1.\,#2,\;#3,\;#4\rangle}
+
+% ================================================================
+% Capability set notation (tracked capabilities in type judgments)
+% ================================================================
+\newcommand{\eff}[1]{\textcolor{capcolor}{\{#1\}}}
+\newcommand{\effempty}{\textcolor{capcolor}{\emptyset}}
+\newcommand{\effsingleton}[1]{\textcolor{capcolor}{\{#1\}}}
+\newcommand{\effunion}{\cup}
+\newcommand{\effdiff}{\setminus}
+\newcommand{\effsubset}{\subseteq}
+\newcommand{\effmem}{\in}
+\newcommand{\Caps}{\mathsf{Caps}}
+
+% ================================================================
+% Context and environment notation
+% ================================================================
+\newcommand{\vlenv}{\rho}
+\newcommand{\cpenv}{\sigma}
+\newcommand{\tpenv}{\Gamma}
+\newcommand{\cpdecl}{\Pi}
+\newcommand{\cpempty}{\cdot}
+
+% ================================================================
+% Capability environment operations
+% ================================================================
+\newcommand{\cplookup}[2]{#1(#2)}
+\newcommand{\cpupdate}[3]{#1[#2 \mapsto #3]}
+\newcommand{\cprestrict}[2]{#1|_{#2}}
+\newcommand{\cpmerge}[2]{#1 \uplus #2}
+\newcommand{\cpdiff}[2]{#1 \ominus #2}
+
+% ================================================================
+% Typing judgment
+% ================================================================
+\newcommand{\typ}[5]{#1, #2 \vdash #3 : #4\;!\;#5}
+\newcommand{\typshort}[4]{#1 \vdash #2 : #3\;!\;#4}
+
+% ================================================================
+% Evaluation judgment
+% ================================================================
+\newcommand{\eval}[4]{\langle\!\langle #1, #2, #3 \rangle\!\rangle \Downarrow #4}
+\newcommand{\evalshort}[2]{#1 \Downarrow #2}
+
+% ================================================================
+% Halting predicates
+% ================================================================
+\newcommand{\haltsval}[3]{\mathcal{V}\llbracket #3 \rrbracket_{#1}(#2)}
+\newcommand{\haltsenv}[3]{\mathcal{E}\llbracket #2 \rrbracket_{#1}(#3)}
+\newcommand{\haltscpenv}[3]{\mathcal{C}\llbracket #2 \rrbracket_{#1}(#3)}
+
+% ================================================================
+% Theorem environments
+% ================================================================
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% ================================================================
+% Proof environment customization
+% ================================================================
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% ================================================================
+% Rule names
+% ================================================================
+\newcommand{\rn}[1]{\textsc{#1}}
+
+% ================================================================
+% Code listings style
+% ================================================================
+\lstdefinelanguage{Jo}{
+  sensitive=true,
+  morekeywords={param,def,defer,allow,with,in,val,receives},
+  morecomment=[l]{//},
+  morestring=[b]"
+}
+
+\lstdefinestyle{pseudo}{
+  language=Jo,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{typecolor},
+  commentstyle=\itshape\color{gray},
+  stringstyle=\color{capcolor},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=0.6em,
+  xleftmargin=2.4em,
+  framexleftmargin=1.6em,
+  aboveskip=1em,
+  belowskip=1em,
+  breaklines=true,
+  frame=single,
+  captionpos=b
+}
+
+% ================================================================
+% Boxes for security implications
+% ================================================================
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{securitybox}[1][]{
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  fonttitle=\bfseries,
+  title={Security Implication},
+  #1
+}
+
+\newtcolorbox{whybox}[1][]{
+  colback=green!5!white,
+  colframe=green!50!black,
+  fonttitle=\bfseries,
+  title={Why Does This Matter?},
+  #1
+}
+
+% ================================================================
+% Miscellaneous
+% ================================================================
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\eg}{\textit{e.g.}}
+\newcommand{\cf}{\textit{cf.}}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\lambdaCC}{$\lambda^{\mathsf{CC}}$}
+\newcommand{\lambdaCCmath}{\lambda^{\mathsf{CC}}}
+\newcommand{\lambdaCap}{\lambdaCC}
+\newcommand{\lambdaCapmath}{\lambdaCCmath}
+
+\endinput

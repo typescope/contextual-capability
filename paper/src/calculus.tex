@@ -1,0 +1,124 @@
+% calculus.tex - The Lambda^Cap Calculus
+
+\section{The \lambdaCap{} Calculus}
+\label{sec:calculus}
+
+\lambdaCap{} is a small extension of the simply-typed lambda calculus with three
+capability constructs: %
+capability access $\tmcvar{c}$, %
+capability binding $\tmwith{c}{e_1}{e_2}$, %
+and capability restriction $\tmallow{\varphi}{e}$. %
+
+We assume the reader is already comfortable with standard formal-language
+notions such as syntax, typing judgments, and big-step evaluation for the
+simply-typed lambda calculus; Pierce's \emph{Types and Programming Languages} is
+a standard reference \cite{pierce-tapl}. %
+
+\autoref{fig:syntax} gives the reader-facing surface syntax. %
+Function syntax uses brace notation, while function types place the designated
+capability set above the arrow: $\tmabs{x}{T_1}{\varphi}{\varphi}{t}$ denotes a
+function that receives the call-site capabilities in $\varphi$, and
+$\tarr{T_1}{T_2}{\varphi}{\varphi}$ is the corresponding function type. %
+The types of the capabilities named in $\varphi$ are defined in the global
+capability declaration $\cpdecl$. %
+
+\begin{figure}[t]
+\centering
+\begin{align*}
+\text{Names} \quad & n \in \mathbb{N} \\[0.25em]
+\text{Capability names} \quad & c, d \\[0.25em]
+\text{Capabilities} \quad & \varphi ::= \effempty \mid \eff{c} \mid \varphi_1 \effunion \varphi_2 \\[0.25em]
+\text{Types} \quad & T ::= \tnat \mid \tarr{T_1}{T_2}{\varphi}{\varphi} \\[0.25em]
+\text{Terms} \quad & t ::= \tmconst{n} \mid x \mid \tmcvar{c} \mid
+    \tmabs{x}{T_1}{\varphi}{\varphi}{t} \mid \tmapp{t_1}{t_2} \\
+    & \quad\;\;\mid \tmwith{c}{e_1}{e_2} \mid \tmallow{\varphi}{e}
+    \\[0.25em]
+\text{Values} \quad & v ::= \vlconst{n} \mid
+    \vlclosshort{x}{t}{\vlenv}{\cpenv}
+\end{align*}
+\caption{Syntax of \lambdaCap{}}
+\label{fig:syntax}
+\end{figure}
+
+\subsection{Semantics}
+\label{sec:semantics}
+
+Evaluation uses a value environment $\vlenv$ for term variables and a capability
+environment $\cpenv$ for capabilities. %
+The evaluation judgment
+\[
+\eval{t}{\vlenv}{\cpenv}{v}
+\]
+means that $t$ evaluates to $v$ under those environments. %
+
+The rules are shown in \autoref{fig:eval-rules}. %
+Capability lookup reads from $\cpenv$. %
+Capability binding evaluates a body under an updated capability environment. %
+Restriction runs a term in a restricted capability environment. %
+The main rule is closure creation: evaluating
+$\tmabs{x}{T}{\varphi}{\varphi}{t}$ stores $\cpdiff{\cpenv}{\varphi}$, not the
+full capability environment. %
+
+\begin{figure}[t]
+\centering
+\begin{mathpar}
+\inferrule*[Right=\rn{E-Const}]
+  { }
+  {\eval{\tmconst{n}}{\vlenv}{\cpenv}{\vlconst{n}}}
+
+\inferrule*[Right=\rn{E-Var}]
+  {\vlenv(x) = v}
+  {\eval{x}{\vlenv}{\cpenv}{v}}
+
+\inferrule*[Right=\rn{E-CVar}]
+  {\cplookup{\cpenv}{c} = v}
+  {\eval{\tmcvar{c}}{\vlenv}{\cpenv}{v}}
+
+\inferrule*[Right=\rn{E-Abs}]
+  { }
+  {\eval{\tmabs{x}{T}{\varphi}{\varphi}{t}}{\vlenv}{\cpenv}
+        {\langle\tmabs{x}{T}{\varphi}{\varphi}{t},\; \vlenv,\; \cpdiff{\cpenv}{\varphi}\rangle}}
+
+\inferrule*[Right=\rn{E-App}]
+  {\eval{t_1}{\vlenv}{\cpenv}{\langle\tmabs{x}{T}{\varphi}{\varphi}{t},\; \vlenv_1,\; \cpenv_1\rangle} \\
+   \eval{t_2}{\vlenv}{\cpenv}{v_2} \\
+   \eval{t}{(\vlenv_1, x \mapsto v_2)}{(\cpmerge{\cpenv}{\cpenv_1})}{v_3}}
+  {\eval{\tmapp{t_1}{t_2}}{\vlenv}{\cpenv}{v_3}}
+
+\inferrule*[Right=\rn{E-With}]
+  {\eval{e_1}{\vlenv}{\cpenv}{v_1} \\
+   \eval{e_2}{\vlenv}{\cpupdate{\cpenv}{c}{v_1}}{v_2}}
+  {\eval{\tmwith{c}{e_1}{e_2}}{\vlenv}{\cpenv}{v_2}}
+
+\inferrule*[Right=\rn{E-Allow}]
+  {\eval{e}{\vlenv}{\cprestrict{\cpenv}{\varphi}}{v}}
+  {\eval{\tmallow{\varphi}{e}}{\vlenv}{\cpenv}{v}}
+\end{mathpar}
+\caption{Evaluation rules for \lambdaCap{}}
+\label{fig:eval-rules}
+\end{figure}
+
+This distinction corresponds to two different use cases. %
+Some capabilities are meant to come from the function's creation context and
+therefore should be captured in the closure. %
+Others are meant to come from the call site and therefore should be supplied by
+the caller at invocation time. %
+
+\input{src/typing}
+
+\subsection{Security Properties}
+\label{sec:security}
+
+At a high level, \lambdaCap{} guarantees that
+\begin{itemize}[nosep]
+\item capability annotations are trustworthy upper bounds on capability use, and
+\item restricted computations cannot rely on capabilities outside the
+  declared boundary.
+\end{itemize}
+
+If a term is typed with capabilities $\varphi$, then evaluation may access only
+capabilities in $\varphi$ from the enclosing environment.
+
+\textbf{Confinement}. %
+Because capability provisioning and access is explicit and checked, well-typed
+code is confined to the provided capabilities.

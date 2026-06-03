@@ -1,0 +1,52 @@
+% related.tex - Related Work
+
+\section{Related Work}
+\label{sec:related}
+
+The most relevant prior work falls into three groups. %
+
+\subsection{Capability Disciplines Without Static Tracking}
+
+Capability systems from Dennis and Van Horn onward \cite{dennis-vanhorn}
+established the core authority model: capabilities are explicit,
+unforgeable references to authority. %
+Miller's object-capability account
+\cite{miller-robust,miller-paradigm} and languages such as E \cite{e-lang},
+Joe-E \cite{joe-e}, and Newspeak \cite{newspeak} demonstrate that this
+discipline scales to realistic programming languages. %
+
+What these systems give is a strong semantic and engineering story about
+authority flow. %
+What they generally do not give is a small static account of
+which capabilities a term may use, nor a compact proof-oriented model of
+fine-grained call-site capability provision. %
+
+\subsection{Static Requirement Tracking}
+
+Lucassen and Gifford \cite{lucassen-gifford} and Talpin and Jouvelot
+\cite{talpin-jouvelot} introduced influential frameworks for tracking
+program requirements in types. %
+ \lambdaCap{} follows that general direction,
+but applies it specifically to capability access. %
+
+The key difference is not merely that \lambdaCap{} tracks capabilities. %
+It is
+that it tracks them in a setting where some capabilities remain under
+call-site control rather than being uniformly captured or manually threaded. %
+In that sense, the model is also close in spirit to coeffects: it describes
+what a computation requires from its context \cite{petricek-coeffects}. %
+
+\subsection{Verified Capability Reasoning}
+
+Swasey \etal{} \cite{swasey-caps} verify object-capability patterns in a
+richer language using logical relations. %
+Their work is closer in proof style
+than in modeling goal: they verify specific patterns in a realistic setting,
+whereas \lambdaCap{} isolates a minimal core calculus with global capability
+soundness. %
+
+Devriese and Piessens \cite{devriese-effect} show, in a different security
+setting, that static reasoning can establish strong semantic guarantees. %
+That
+result is not about capabilities, but it supports the general thesis that
+small static models can carry real security meaning. %

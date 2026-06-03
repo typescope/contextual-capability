@@ -1,0 +1,77 @@
+% introduction.tex - Introduction to the Lambda^Cap white paper
+
+\section{Introduction}
+\label{sec:introduction}
+
+Software systems increasingly execute code that is neither fully trusted nor
+fully reviewed before deployment. %
+Some of this code comes from plugins or user-defined scripts. %
+Increasingly, it is generated on demand by large language models. %
+In all of these settings, the security problem is the same: how do we ensure
+that code receives exactly the authority it needs, and no more?
+
+This is a \emph{least-privilege} problem: authority should be explicit, bounded,
+and reviewable rather than ambient \cite{saltzer-schroeder}. %
+Capability-based security gives the right general answer to least privilege and
+confused-deputy problems \cite{hardy-confused}, %
+but past capability models and capability-oriented languages such as E and Joe-E
+leave several important problems unresolved \cite{e-lang,joe-e}. %
+
+This paper presents a mechanized mathematical model of \emph{contextual
+  capabilities}. %
+The main purpose of the model is to provide a foundation for designing new
+secure programming languages in which authority is explicit, statically tracked,
+and controlled by program context. %
+
+\subsection{Research Gap}
+
+There are three major limitations in past capability models that affect the
+usability of secure programming languages. %
+
+First, a capability system should support \emph{static checking of capability
+  usage}. %
+It should be possible to read a function's type signature as a trustworthy upper
+bound on the capabilities it may use. %
+The object-capability model \cite{miller-robust,miller-paradigm} gives a strong
+design discipline, %
+but it does not by itself provide a compact type-level account of capability use
+that can be checked compositionally. %
+
+Second, a capability system should facilitate the \emph{propagation of
+  fine-grained capabilities}. %
+Capability-based programs do not carry a single coarse permission; they pass
+user-scoped services, output channels, loggers, tool bindings, and other narrow
+capabilities through higher-order code. %
+Without language support, manual propagation through every interface quickly
+becomes boilerplate-heavy. %
+A useful model should make such propagation explicit and compositional, without
+collapsing these capabilities into ambient authority. %
+
+Third, a capability system should support \emph{simulation and testing} by
+treating capabilities as abstract interfaces rather than hidden ambient
+mechanisms. %
+When capabilities remain explicit program values, the same program structure can
+be exercised against restricted, attenuated, or mocked capabilities. %
+Existing capability systems do not always make that form of substitution natural
+at the level of the model. %
+
+\subsection{Contextual Capabilities}
+
+This paper proposes a mathematical model of \emph{contextual capabilities}. %
+The basic idea is that capabilities are ordinary typed values that can be
+explicitly provided or rebound for a context. %
+Code deep in a call chain may then use them without every intermediate function
+carrying them as ordinary parameters. %
+Their use is tracked statically, but their availability is determined by
+surrounding program context rather than by ambient authority. %
+
+\subsection{Contribution}
+
+We present \lambdaCC{}, a minimal calculus of contextual capabilities. %
+Its contribution is to combine explicit capability values, static capability
+tracking, and a higher-order operational account in one verified formalism. %
+The resulting model supports reasoning about restricted execution,
+capability-sensitive interfaces, authority attenuation, and the safe execution
+of untrusted code. %
+It is intended as a design model for new secure programming languages, rather
+than as a complete implementation strategy by itself. %

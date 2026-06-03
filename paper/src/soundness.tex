@@ -1,0 +1,107 @@
+% soundness.tex - Soundness Theorem and Proof
+
+\section{Soundness Theorem}
+\label{sec:soundness}
+
+This section explains how the soundness of the capability model is established. %
+
+\subsection{Main Theorem}
+
+\begin{theorem}[Soundness]
+\label{thm:soundness}
+For any capability declaration $\cpdecl$, term $t$, and type $T$:
+\[
+\typ{\cpdecl}{\cdot}{t}{T}{\effempty}
+\quad\Longrightarrow\quad
+\exists v.\; \eval{t}{\cdot}{\cpempty}{v}
+\]
+\end{theorem}
+
+In words: a closed term typed with empty capabilities evaluates successfully
+with no capabilities provided. %
+
+\subsection{Why This Is Enough}
+
+This theorem establishes the central static guarantee of the calculus: the
+capability annotation in the type system is sound. %
+If the type system says a term needs no capabilities, then evaluation agrees. %
+
+The more general statement, used in the proof, is that a term typed with
+capability set $\varphi$ evaluates successfully under any capability environment
+that supplies $\varphi$. %
+
+\subsection{Proof Strategy}
+
+The proof uses logical relations, a standard technique for semantic type
+soundness arguments \cite{pierce-atapl}. %
+Rather than reasoning directly about all evaluations, we define semantic
+predicates describing when:
+\begin{itemize}[nosep]
+\item a value satisfies a type,
+\item a value environment satisfies a typing environment, and
+\item a capability environment satisfies a capability set. %
+\end{itemize}
+
+The central proof obligation is then the familiar one: well-typed terms in
+satisfying environments evaluate to satisfying values. %
+
+\subsection{The Fundamental Lemma}
+
+\begin{definition}[Logical Relations]
+\label{def:logical-relations}
+For a capability declaration $\cpdecl$, the proof defines three mutually
+supporting semantic predicates. %
+
+\[
+\begin{array}{rcl}
+\haltsval{\cpdecl}{v}{T}
+&\text{means}&
+v \text{ is a well-behaved semantic value of type } T, \\[0.25em]
+\haltsenv{\cpdecl}{\tpenv}{\vlenv}
+&\text{means}&
+\vlenv \text{ maps every } x{:}T \in \tpenv
+\text{ to some } v \text{ with } \haltsval{\cpdecl}{v}{T}, \\[0.25em]
+\haltscpenv{\cpdecl}{\varphi}{\cpenv}
+&\text{means}&
+\cpenv \text{ supplies every } c \in \varphi
+\text{ with a value satisfying } \cpdecl(c).
+\end{array}
+\]
+
+The value relation is defined by recursion on types. %
+Natural-number values satisfy $\tnat$. %
+A closure satisfies $\tarr{T_1}{T_2}{\varphi}{\varphi}$ when, for every argument
+satisfying $T_1$ and every caller capability environment satisfying $\varphi$,
+evaluating the closure body under the extended value environment and merged
+capability environment produces a result satisfying $T_2$. %
+\end{definition}
+
+\begin{lemma}[Fundamental Lemma]
+\label{lem:halts-env-closed}
+For any $\cpdecl$, $\tpenv$, $\vlenv$, $\cpenv$, $t$, $T$, and $\varphi$:
+\[
+\begin{array}{l}
+\haltsenv{\cpdecl}{\tpenv}{\vlenv} \;\land \\
+\haltscpenv{\cpdecl}{\varphi}{\cpenv} \;\land \\
+\typ{\cpdecl}{\tpenv}{t}{T}{\varphi}
+\end{array}
+\quad\Longrightarrow\quad
+\exists v.\; \eval{t}{\vlenv}{\cpenv}{v} \land \haltsval{\cpdecl}{v}{T}
+\]
+\end{lemma}
+
+This lemma is the real engine of the proof. %
+The theorem follows
+immediately by instantiating it with empty environments and empty
+capabilities. %
+
+\subsection{Mechanization}
+
+The development is mechanized in Coq. %
+The mechanization covers the definitions, auxiliary lemmas on capability
+environments, the fundamental lemma, and the final soundness theorem. %
+
+For this paper, the important point is not merely that the theorem has been
+checked by a proof assistant. %
+The machine-checked proof confirms the mathematical soundness of the capability
+model. %

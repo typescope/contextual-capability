@@ -1,0 +1,40 @@
+% conclusion.tex - Conclusion
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\lambdaCap{} is a small calculus aimed at three gaps in prior capability
+work: the lack of a compact static account of capability use, the lack of a
+clean formal model for fine-grained capability propagation through
+higher-order code, and the lack of a corresponding foundation for simulation
+and testing with explicit capability values. %
+
+The model addresses these gaps with contextual capabilities: capabilities
+that are tracked statically, yet may still be supplied by the calling context
+rather than captured unconditionally. %
+This makes it possible to reason about
+two important patterns at once:
+\begin{itemize}[nosep]
+\item packaging attenuated authority into narrow interfaces, and
+\item preserving caller control over invocation-time capabilities such as
+  output channels or tool bindings. %
+\end{itemize}
+
+The soundness theorem shows that capability annotations are sound with
+respect to evaluation. %
+If the type system says a term uses no capabilities,
+then evaluation succeeds with no capabilities provided. %
+More generally, the
+model supports rigorous reasoning about authority restriction, capability
+containment, and higher-order confinement. %
+
+The result is a verified semantic core for statically checked contextual
+capabilities, especially relevant when executing untrusted or LLM-generated
+code. %
+Its main purpose is to guide the design of new secure programming
+languages that make capability use explicit, statically checkable, and
+controlled by program context. %
+
+Resource bounds and covert channels are not addressed by this core calculus;
+they must be handled by other means, such as runtime resource enforcement and
+side-channel controls. %
