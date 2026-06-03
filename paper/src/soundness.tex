@@ -5,8 +5,6 @@
 
 This section explains how the soundness of the capability model is established. %
 
-\subsection{Main Theorem}
-
 \begin{theorem}[Soundness]
 \label{thm:soundness}
 For any capability declaration $\cpdecl$, term $t$, and type $T$:
@@ -91,6 +89,14 @@ For any $\cpdecl$, $\tpenv$, $\vlenv$, $\cpenv$, $t$, $T$, and $\varphi$:
 \end{lemma}
 
 This lemma is the real engine of the proof. %
+In words, if the variables and capabilities required by a well-typed term are
+provided by semantically valid environments, then evaluation succeeds, uses only
+the capabilities named by the term's capability annotation, and returns a value
+of the stated type. %
+
+For security, the lemma says that the capability annotation is a sound upper
+bound on runtime authority: code typed with capability set $\varphi$ cannot
+obtain untracked authority outside $\varphi$. %
 The theorem follows
 immediately by instantiating it with empty environments and empty
 capabilities. %

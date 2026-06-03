@@ -1,6 +1,6 @@
 (* ------------------------------------------------------------------- *)
 (* This file formalizes Lambda^CC, a simply-typed lambda calculus      *)
-(* with contextual capabilities and explicit effect annotations        *)
+(* with contextual capabilities and explicit capability annotations    *)
 (* tracking which capability indices may be read.                      *)
 (*                                                                     *)
 (* The proof follows a logical-relations style normalization argument. *)
