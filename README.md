@@ -35,13 +35,23 @@ The paper builds `paper/main.pdf`.
 
 ## Citation
 
-If you use this model, please cite:
+To cite the mathematical model (`paper.pdf`), please use:
 
 ```bibtex
 @misc{lambda-cc,
   author = {Fengyun Liu and Ond{\v{r}}ej Lhot{\'a}k},
   title = {A Mathematical Model of Contextual Capabilities},
   note = {Mechanized Coq development and accompanying paper},
+  year = {2026}
+}
+```
+
+To cite the design of Jo (`jo-design.pdf`), please use:
+
+```bibtex
+@misc{jo-design,
+  author = {Fengyun Liu and Cl{\'e}ment Blaudeau and Ond{\v{r}}ej Lhot{\'a}k},
+  title = {A Parametric Design of Globals and Capabilities},
   year = {2026}
 }
 ```
