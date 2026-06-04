@@ -14,9 +14,10 @@ testable, but avoids turning capabilities into hidden ambient authority.
 
 ## Contents
 
-- `lambda_cc.v` mechanizes the calculus and soundness proof in Coq.
-- `paper/` contains the accompanying paper describing the calculus,
-  operational semantics, type system, security intuition, and proof strategy.
+- `paper.pdf` explains the mathematical model of contextual capabilities.
+- `jo-design.pdf` describes the design of Jo, a secure language that incarnates the model.
+- `lambda_cc.v` mechanizes the model and soundness proof in Coq.
+- `paper/` contains the LaTeX source for the mathematical model paper.
 
 ## Checking the Coq Development
 
