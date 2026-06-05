@@ -1,4 +1,4 @@
-# Contextual Capabilities
+# A Mathematical Model of Contextual Capabilities
 
 This repository contains a small formal model of contextual capabilities.
 Its main purpose is to guide the design of new secure programming languages.
