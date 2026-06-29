@@ -1,0 +1,24 @@
+% explicitness.tex - Explicit capability specifications
+
+\section{Should Capabilities Be Explicit?}
+\label{sec:explicit-capabilities}
+
+A central design question is how visible capabilities should be. %
+One philosophy is that capabilities should remain visible in the program
+structure, since visible authority supports review, audits, and a clear
+security story. %
+In private communication, the security expert Matt Rice has raised the concern
+that hiding capability propagation can make it harder for reviewers to see
+where authority flows. %
+
+\lambdaCC{} leaves this choice to language and library designers. %
+Because capabilities are statically tracked, a language can make capability
+requirements explicit where that visibility matters, while still avoiding
+manual propagation through every intermediate function. %
+For example, a language may require public functions to have explicit capability
+specifications. %
+Such usability concerns are up to language designers' discretion. %
+We believe it is good practice to make capability requirements explicit at
+module boundaries. %
+Within a module, contextual binding can reduce repetitive plumbing without
+turning capabilities into ambient authority. %

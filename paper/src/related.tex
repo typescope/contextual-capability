@@ -3,7 +3,7 @@
 \section{Related Work}
 \label{sec:related}
 
-The most relevant prior work falls into three groups. %
+The most relevant prior work falls into several groups. %
 
 \subsection{Capability Disciplines Without Static Tracking}
 
@@ -20,6 +20,17 @@ authority flow. %
 What they generally do not give is a small static account of
 which capabilities a term may use, nor a compact proof-oriented model of
 fine-grained call-site capability provision. %
+
+\subsection{Capability-Based Module Systems}
+
+Wyvern is a closely related language-based security design. %
+Melicher \etal{} \cite{melicher-wyvern} propose a capability-based module
+system for authority control, and Fish \etal{} \cite{fish-wyvern-io} present
+a case study building an I/O library for Wyvern. %
+\lambdaCap{} shares the goal that I/O authority should be represented by
+capabilities rather than ambient effects, but studies a smaller formal core in
+which capability access is reflected directly in term typing and call-site
+capability provision. %
 
 \subsection{Static Requirement Tracking}
 
