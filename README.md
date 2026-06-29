@@ -56,3 +56,13 @@ To cite the design of Jo (`jo-design.pdf`), please use:
   year = {2026}
 }
 ```
+
+## Change Log
+
+### A Mathematical Model of Contextual Capabilities (`paper.pdf`)
+
+- 2026-06-29: Add Wyvern related work; explicit capabilities section.
+
+### A Parametric Design of Globals and Capabilities (`jo-design.pdf`)
+
+- 2026-06-29: Add Wyvern related work.
